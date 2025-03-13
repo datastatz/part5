@@ -52,20 +52,25 @@ const App = () => {
     }
   }
 
-  // Simplified handleCreateBlog function (receives blog from BlogForm)
-  const handleCreateBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    try {
-      const createdBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(createdBlog))
 
-      setMessage(`A new blog "${blogObject.title}" by ${blogObject.author} added!`)
-      setTimeout(() => setMessage(null), 5000)
-    } catch (error) {
-      setMessage('Error adding blog')
-      setTimeout(() => setMessage(null), 5000)
+  const handleCreateBlog = async (blogObject) => {
+    if (blogFormRef.current) {
+      blogFormRef.current.toggleVisibility();
     }
-  }
+  
+    try {
+      const createdBlog = await blogService.create(blogObject); // ✅ Send to backend
+      setBlogs(blogs.concat(createdBlog)); // ✅ Update state
+  
+      setMessage(`A new blog "${blogObject.title}" by ${blogObject.author} added!`);
+      setTimeout(() => setMessage(null), 5000);
+    } catch (error) {
+      console.error("Error adding blog:", error.response?.data || error.message);
+      setMessage("Error adding blog");
+      setTimeout(() => setMessage(null), 5000);
+    }
+  };
+  
 
  
   if (user === null) {
