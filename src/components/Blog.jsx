@@ -1,22 +1,29 @@
-import { useState } from 'react'
+import { useState } from 'react'  // Import useState
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = ({ blog, updateBlogLikes }) => {
+  const [visible, setVisible] = useState(false)  // Now useState is available
 
   const toggleVisibility = () => {
     setVisible(!visible)
   }
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const handleLike = async () => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    }
+
+    try {
+      await blogService.updateLikes(blog.id, updatedBlog)
+      updateBlogLikes(blog.id, updatedBlog) // Call function from App.jsx
+    } catch (error) {
+      console.error("Error updating likes:", error)
+    }
   }
 
   return (
-    <div style={blogStyle}>
+    <div>
       <div>
         {blog.title} {blog.author} 
         <button onClick={toggleVisibility}>
@@ -27,7 +34,10 @@ const Blog = ({ blog }) => {
       {visible && (
         <div>
           <p>{blog.url}</p>
-          <p>Likes: {blog.likes} <button>Like</button></p>
+          <p>
+            Likes: {blog.likes} 
+            <button onClick={handleLike}>Like</button>
+          </p>
           <p>Added by {blog.user?.name || 'Unknown'}</p>
         </div>
       )}

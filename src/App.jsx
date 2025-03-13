@@ -101,6 +101,14 @@ const App = () => {
     )
   }
 
+  const handleUpdateLikes = (id, updatedBlog) => {
+    setBlogs(blogs
+      .map(blog => blog.id === id ? updatedBlog : blog)
+      .sort((a, b) => b.likes - a.likes) // ✅ Keep sorted after like
+    )
+  }
+  
+
   return (
     <div>
       <h2>blogs</h2>
@@ -111,11 +119,14 @@ const App = () => {
         <BlogForm createBlog={handleCreateBlog} />
       </Togglable>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {blogs
+      .slice() // 
+      .sort((a, b) => b.likes - a.likes) 
+      .map(blog =>
+        <Blog key={blog.id} blog={blog} updateBlogLikes={handleUpdateLikes} />
       )}
-    </div>
-  )
+  </div>
+)
 }
 
 export default App
