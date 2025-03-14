@@ -12,4 +12,9 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    environment: 'jsdom',  // Simulate browser environment for testing
+    globals: true,         // Enables global test functions (test, expect, describe)
+    setupFiles: './testSetup.js',  // Ensure this file exists
+  }
 })
